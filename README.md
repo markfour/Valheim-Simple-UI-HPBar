@@ -2,6 +2,8 @@
 
 - 戦闘中にHPバー、スタミナバーが見やすいように中央に移動しています
 
+<img width="480" alt="20261002235333_1" src="https://github.com/user-attachments/assets/a57820ee-3536-415a-bcf5-c2145f7bc523" />
+
 ## 現在の範囲 (v0.1.0)
 
 - HP / スタミナ / エイトル: 画面下中央の単色バー + 数値。HPは緑で固定
