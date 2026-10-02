@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net48</TargetFramework>
+    <AssemblyName>Simple-UI-HPBar</AssemblyName>
+    <RootNamespace>SimpleUIHPBar</RootNamespace>
+    <LangVersion>10</LangVersion>
+    <Version>0.1.0</Version>
+
+    <!-- 環境ごとのパスはここに書かず、Simple-UI-HPBar.csproj.user(git 管理外)で上書きする。
+         README の「ビルド」を参照。下は Steam 既定の場所で、BepInEx をゲームフォルダに直接入れた場合の値。 -->
+    <ValheimPath Condition="'$(ValheimPath)' == ''">C:\Program Files (x86)\Steam\steamapps\common\Valheim</ValheimPath>
+    <BepInExPath Condition="'$(BepInExPath)' == ''">$(ValheimPath)\BepInEx</BepInExPath>
+    <Managed>$(ValheimPath)\valheim_Data\Managed</Managed>
+    <BepInExCore>$(BepInExPath)\core</BepInExCore>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NETFramework.ReferenceAssemblies" Version="1.0.3" PrivateAssets="all" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="BepInEx"><HintPath>$(BepInExCore)\BepInEx.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="0Harmony"><HintPath>$(BepInExCore)\0Harmony.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="assembly_valheim"><HintPath>$(Managed)\assembly_valheim.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine"><HintPath>$(Managed)\UnityEngine.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.CoreModule"><HintPath>$(Managed)\UnityEngine.CoreModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UI"><HintPath>$(Managed)\UnityEngine.UI.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.UIModule"><HintPath>$(Managed)\UnityEngine.UIModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="UnityEngine.TextRenderingModule"><HintPath>$(Managed)\UnityEngine.TextRenderingModule.dll</HintPath><Private>false</Private></Reference>
+    <Reference Include="Unity.TextMeshPro"><HintPath>$(Managed)\Unity.TextMeshPro.dll</HintPath><Private>false</Private></Reference>
+  </ItemGroup>
+
+  <!-- ビルド後に BepInEx/plugins/Simple-UI-HPBar へ自動コピー -->
+  <Target Name="DeployToValheim" AfterTargets="Build" Condition="Exists('$(BepInExPath)\core')">
+    <Copy SourceFiles="$(TargetPath)" DestinationFolder="$(BepInExPath)\plugins\Simple-UI-HPBar" />
+  </Target>
+
+  <!-- Release ビルド時に Thunderstore 用の zip を dist/ に作る -->
+  <Target Name="PackThunderstore" AfterTargets="Build" Condition="'$(Configuration)' == 'Release'">
+    <PropertyGroup>
+      <PackDir>$(MSBuildProjectDirectory)\dist\package</PackDir>
+    </PropertyGroup>
+    <RemoveDir Directories="$(PackDir)" />
+    <Copy SourceFiles="$(TargetPath);thunderstore\manifest.json;thunderstore\icon.png;README.md;CHANGELOG.md" DestinationFolder="$(PackDir)" />
+    <ZipDirectory SourceDirectory="$(PackDir)" DestinationFile="$(MSBuildProjectDirectory)\dist\Simple_UI_HPBar-$(Version).zip" Overwrite="true" />
+  </Target>
+
+</Project>

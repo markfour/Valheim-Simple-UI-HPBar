@@ -1,0 +1,9 @@
+{
+  "name": "Simple_UI_HPBar",
+  "version_number": "0.1.0",
+  "website_url": "",
+  "description": "Minimal, flat HP / stamina / eitr bars and food display. Client-side, visual only.",
+  "dependencies": [
+    "denikson-BepInExPack_Valheim-5.4.2351"
+  ]
+}
